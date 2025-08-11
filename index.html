@@ -365,6 +365,7 @@
             const file = audioFiles[index];
             const objectURL = URL.createObjectURL(file);
             audioPlayer.src = objectURL;
+            audioPlayer.loop = true
             audioPlayer.play().catch(err => console.log("Playback error:", err));
             }
         });
@@ -485,4 +486,5 @@
     </script>
 </body>
 </html>
+
 
