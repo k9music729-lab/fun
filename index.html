@@ -255,6 +255,16 @@
                   class="story-button"
               >
           </div>
+            <!-- Background Audio Selector -->
+            <div class="story-card">
+                <div class="card-header">
+                    <h2 class="card-title">Background Audio</h2>
+                </div>
+                <select id="audioSelector" class="story-input">
+                    <!-- Options populated by JS -->
+                </select>
+                <button id="playAudioBtn" class="story-button">Play Selected Audio</button>
+            </div>
             <!-- Story Input Form -->
             <div class="story-card">
                 <div class="card-header">
@@ -356,6 +366,38 @@
             }, 8000);
         }
 
+        // Predefined GitHub audio file URLs
+        const audioFiles = [
+            { name: "Track 1", url: "https://raw.githubusercontent.com/USERNAME/REPO/main/assets/audio/track1.mp3" },
+            { name: "Track 2", url: "https://raw.githubusercontent.com/USERNAME/REPO/main/assets/audio/track2.mp3" },
+            { name: "Track 3", url: "https://raw.githubusercontent.com/USERNAME/REPO/main/assets/audio/track3.mp3" }
+        ];
+        
+        const audioSelector = document.getElementById('audioSelector');
+        const playAudioBtn = document.getElementById('playAudioBtn');
+        let audioPlayer = new Audio();
+        
+        // Populate dropdown
+        audioFiles.forEach((file, index) => {
+            const option = document.createElement('option');
+            option.value = index;
+            option.textContent = file.name;
+            audioSelector.appendChild(option);
+        });
+        
+        playAudioBtn.addEventListener('click', () => {
+            const selectedIndex = audioSelector.value;
+            const selectedFile = audioFiles[selectedIndex];
+        
+            audioPlayer.src = selectedFile.url;
+            audioPlayer.volume = 0.4; // Adjust background volume
+            audioPlayer.play().catch(err => {
+                console.error("Audio play failed:", err);
+            });
+        });
+
+
+        
         function showMedia(media) {
             if (media.type === 'image') {
                 storyVideo.style.display = 'none';
@@ -441,3 +483,4 @@
     </script>
 </body>
 </html>
+
