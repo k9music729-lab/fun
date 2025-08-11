@@ -255,16 +255,19 @@
                   class="story-button"
               >
           </div>
-            <!-- Background Audio Selector -->
-            <div class="story-card">
-                <div class="card-header">
-                    <h2 class="card-title">Background Audio</h2>
-                </div>
-                <select id="audioSelector" class="story-input">
-                    <!-- Options populated by JS -->
-                </select>
-                <button id="playAudioBtn" class="story-button">Play Selected Audio</button>
-            </div>
+          <h1>Upload a Folder of Audio</h1>
+  
+          <!-- Folder input -->
+          <input type="file" id="audioFolder" webkitdirectory multiple accept="audio/*"><br><br>
+          
+          <!-- Audio selection list -->
+          <select id="audioList">
+            <option value="">-- Select an audio file --</option>
+          </select>
+          
+          <!-- Audio player -->
+          <br><br>
+          <audio id="player" controls></audio>
             <!-- Story Input Form -->
             <div class="story-card">
                 <div class="card-header">
@@ -336,6 +339,36 @@
         let mediaFiles = [];
         let currentMediaIndex = 0;
         let slideshowInterval;
+        const folderInput = document.getElementById('audioFolder');
+        const audioList = document.getElementById('audioList');
+        const audioPlayer = document.getElementById('player');
+        let audioFiles = [];
+    
+        // Load files from the folder
+        folderInput.addEventListener('change', function () {
+            audioFiles = Array.from(this.files).filter(file => file.type.startsWith('audio/'));
+            
+            // Populate the dropdown
+            audioList.innerHTML = '<option value="">-- Select an audio file --</option>';
+            audioFiles.forEach((file, index) => {
+            const option = document.createElement('option');
+            option.value = index;
+            option.textContent = file.name;
+            audioList.appendChild(option);
+            });
+        });
+    
+        // Play selected file
+        audioList.addEventListener('change', function () {
+            const index = this.value;
+            if (index !== '') {
+            const file = audioFiles[index];
+            const objectURL = URL.createObjectURL(file);
+            audioPlayer.src = objectURL;
+            audioPlayer.play().catch(err => console.log("Playback error:", err));
+            }
+        });
+
 
         mediaUpload.addEventListener('change', function () {
             mediaFiles = [];
@@ -365,42 +398,6 @@
                 showMedia(mediaFiles[currentMediaIndex]);
             }, 8000);
         }
-
-        // Predefined GitHub audio file URLs
-        const audioFiles = [
-            { name: "JOI", url: "https://github.com/k9music729-lab/fun/blob/main/JOI.mp3" },
-            { name: "bhbhi1", url: "https://github.com/k9music729-lab/fun/blob/main/bhbhi1.mp3" },
-            { name: "bhbhi2", url: "https://github.com/k9music729-lab/fun/blob/main/bhbhi2.mp3" },
-            { name: "kml1", url: "https://github.com/k9music729-lab/fun/blob/main/kml1.mp3" },
-            { name: "kml2", url: "https://github.com/k9music729-lab/fun/blob/main/kml2.mp3" },
-            { name: "usual1", url: "https://github.com/k9music729-lab/fun/blob/main/usual1.mp3" },
-            { name: "usual2", url: "https://github.com/k9music729-lab/fun/blob/main/usual2.mp3" },
-            { name: "usual3", url: "https://github.com/k9music729-lab/fun/blob/main/usual3.mp3" }
-        ];
-        
-        const audioSelector = document.getElementById('audioSelector');
-        const playAudioBtn = document.getElementById('playAudioBtn');
-        let audioPlayer = new Audio();
-        
-        // Populate dropdown
-        audioFiles.forEach((file, index) => {
-            const option = document.createElement('option');
-            option.value = index;
-            option.textContent = file.name;
-            audioSelector.appendChild(option);
-        });
-        
-        playAudioBtn.addEventListener('click', () => {
-            const selectedIndex = audioSelector.value;
-            const selectedFile = audioFiles[selectedIndex];
-        
-            audioPlayer.src = selectedFile.url;
-            audioPlayer.volume = 0.4; // Adjust background volume
-            audioPlayer.play().catch(err => {
-                console.error("Audio play failed:", err);
-            });
-        });
-
 
         
         function showMedia(media) {
@@ -488,5 +485,4 @@
     </script>
 </body>
 </html>
-
 
