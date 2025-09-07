@@ -320,7 +320,6 @@
                             id="plot-2" 
                             class="story-input-2" 
                             placeholder="A brave knight discovers a magical portal in an ancient forest..."
-                            required
                         ></textarea>
                     </div>
                     
@@ -379,7 +378,7 @@
         const audioPlayer = document.getElementById('player');
         let audioFiles = [];
 
-        const char_input=document.getElementById('plot-2');
+        const char_input=document.getElementById('plot-2').value;
         
     
         // Load files from the folder
@@ -524,6 +523,7 @@
     </script>
 </body>
 </html>
+
 
 
 
